@@ -11,10 +11,19 @@ const addGlobalRole = () => {
         return;
     }
 
-    const response = {
-        name: roleName,
-        permissions: document.getElementById('global-permission-select').getValue(),
-    };
+const permissionSelect = document.getElementById('global-permission-select');
+
+
+const selectedPermissions = [];
+for (let i = 0; i < permissionSelect.selectedOptions.length; i++) {
+  selectedPermissions.push(permissionSelect.selectedOptions[i].value);
+}
+
+
+const response = {
+  name: roleName,
+  permissions: selectedPermissions,
+};
 
     if (response.permissions.length <= 0) {
         alert('Please select at least one permission');
@@ -35,11 +44,24 @@ const addFolderRole = () => {
         return;
     }
 
-    const response = {
-        name: roleName,
-        permissions: document.getElementById('folder-permission-select').getValue(),
-        folderNames: document.getElementById('folder-select').getValue(),
-    };
+const permissionSelect = document.getElementById('folder-permission-select');
+const folderSelect = document.getElementById('folder-select');
+
+const selectedPermissions = [];
+for (let i = 0; i < permissionSelect.selectedOptions.length; i++) {
+  selectedPermissions.push(permissionSelect.selectedOptions[i].value);
+}
+
+const selectedFolders = [];
+for (let i = 0; i < folderSelect.selectedOptions.length; i++) {
+  selectedFolders.push(folderSelect.selectedOptions[i].value);
+}
+
+const response = {
+  name: roleName,
+  permissions: selectedPermissions,
+  folderNames: selectedFolders,
+};
 
     if (!response.permissions || response.permissions.length <= 0) {
         alert('Please select at least one permission');
@@ -64,12 +86,24 @@ const addAgentRole = () => {
         alert('Please enter a valid name for the role to be added');
         return;
     }
+const permissionSelect = document.getElementById('agent-permission-select');
+const agentSelect = document.getElementById('agent-select');
 
-    const response = {
-        name: roleName,
-        agentNames: document.getElementById('agent-select').getValue(),
-        permissions: document.getElementById('agent-permission-select').getValue(),
-    };
+const selectedPermissions = [];
+for (let i = 0; i < permissionSelect.selectedOptions.length; i++) {
+  selectedPermissions.push(permissionSelect.selectedOptions[i].value);
+}
+
+const selectedAgents = [];
+for (let i = 0; i < agentSelect.selectedOptions.length; i++) {
+  selectedAgents.push(agentSelect.selectedOptions[i].value);
+}
+
+const response = {
+  name: roleName,
+  permissions: selectedPermissions,
+  agentNames: selectedAgents,
+};
 
     if (!response.permissions || response.permissions.length <= 0) {
         alert('Please select at least one permission');
@@ -107,14 +141,16 @@ const sendPostRequest = (postUrl, json) => {
         }
     };
 
-//    // this is really bad.
-//    // See https://github.com/jenkinsci/jenkins/blob/75468da366c1d257a51655dcbe952d55b8aeeb9c/war/src/main/js/util/jenkins.js#L22
-//    const oldPrototype = Array.prototype.toJSON;
-//    delete Array.prototype.toJSON;
-//
-//    try {
-//        xhr.send(JSON.stringify(json));
-//    } finally {
-//        Array.prototype.toJSON = oldPrototype;
-//    }
+    // this is really bad.
+    // See https://github.com/jenkinsci/jenkins/blob/75468da366c1d257a51655dcbe952d55b8aeeb9c/war/src/main/js/util/jenkins.js#L22
+    const oldPrototype = Array.prototype.toJSON;
+    delete Array.prototype.toJSON;
+
+    try {
+        xhr.send(JSON.stringify(json));
+    } finally {
+        Array.prototype.toJSON = oldPrototype;
+    }
 };
+
+
